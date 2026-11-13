@@ -1,5 +1,5 @@
 const CACHE = "fibra-v1";
-const ARCHIVOS = ["./fibra.html", "./manifest.json", "./icono.png"];
+const ARCHIVOS = ["./index.html", "./manifest.json", "./icono.png"];
 
 self.addEventListener("install", (e) => {
   e.waitUntil(caches.open(CACHE).then((c) => c.addAll(ARCHIVOS)));
