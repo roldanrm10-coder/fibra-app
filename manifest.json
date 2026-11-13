@@ -1,7 +1,7 @@
 {
   "name": "Colores de fibra TIA-598",
   "short_name": "Fibra",
-  "start_url": "./index.html",
+  "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "background_color": "#ffffff",
