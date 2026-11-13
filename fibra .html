@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Colores de fibra TIA-598</title>
+  <link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0057B8">
+<style>
+  body { font-family: sans-serif; max-width: 420px; margin: 20px auto; padding: 0 12px; }
+  label, select, input, button { display: block; width: 100%; font-size: 18px; margin: 8px 0; padding: 10px; box-sizing: border-box; }
+  .fila { display: flex; align-items: center; gap: 12px; margin: 12px 0; font-size: 20px; }
+  .cuadro { width: 48px; height: 48px; border-radius: 8px; border: 2px solid #333; }
+  #error { color: #b00020; }
+</style>
+</head>
+<body>
+<h2>Colores de fibra TIA-598</h2>
+
+<label for="cable">Tipo de cable</label>
+<select id="cable">
+  <option value="6">6 hilos</option>
+  <option value="12">12 hilos</option>
+  <option value="24">24 hilos</option>
+  <option value="48">48 hilos</option>
+  <option value="144" selected>144 hilos</option>
+</select>
+
+<label for="hilo">Número de hilo</label>
+<input id="hilo" type="number" min="1" inputmode="numeric">
+<button onclick="consultar()">Consultar</button>
+
+<p id="error"></p>
+<div id="resultado"></div>
+
+<script>
+const COLORES = [
+  { nombre: "Azul",     hex: "#0057B8" },
+  { nombre: "Naranja",  hex: "#FF8200" },
+  { nombre: "Verde",    hex: "#00A651" },
+  { nombre: "Marrón",   hex: "#7B4A1E" },
+  { nombre: "Gris",     hex: "#8A8D8F" },
+  { nombre: "Blanco",   hex: "#FFFFFF" },
+  { nombre: "Rojo",     hex: "#E4002B" },
+  { nombre: "Negro",    hex: "#000000" },
+  { nombre: "Amarillo", hex: "#FFD100" },
+  { nombre: "Violeta",  hex: "#7A3E9D" },
+  { nombre: "Rosa",     hex: "#F49AC2" },
+  { nombre: "Aqua",     hex: "#00B7C3" }
+];
+
+// Fibras por buffer según el tipo de cable
+const FIBRAS_POR_BUFFER = { 6: 6, 12: 6, 24: 6, 48: 12, 144: 12 };
+
+function fila(titulo, color) {
+  return '<div class="fila"><div class="cuadro" style="background:' + color.hex + '"></div>' +
+         '<span>' + titulo + ': <b>' + color.nombre + '</b></span></div>';
+}
+
+function consultar() {
+  const cable = parseInt(document.getElementById("cable").value);
+  const hilo = parseInt(document.getElementById("hilo").value);
+  const error = document.getElementById("error");
+  const salida = document.getElementById("resultado");
+  error.textContent = "";
+  salida.innerHTML = "";
+
+  if (isNaN(hilo) || hilo < 1 || hilo > cable) {
+    error.textContent = "Escribe un número de hilo entre 1 y " + cable + ".";
+    return;
+  }
+
+  const porBuffer = FIBRAS_POR_BUFFER[cable];
+  const numBuffer = Math.ceil(hilo / porBuffer);
+  const numFibra = ((hilo - 1) % porBuffer) + 1;
+
+  const buffer = COLORES[(numBuffer - 1) % 12];
+  const fibra = COLORES[numFibra - 1];
+
+  salida.innerHTML =
+    '<p>Hilo ' + hilo + ' de ' + cable + ' → buffer ' + numBuffer + ', fibra ' + numFibra + '</p>' +
+    fila("Buffer", buffer) +
+    fila("Fibra", fibra);
+}
+  if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("sw.js");
+}
+</script>
+</body>
+</html>
